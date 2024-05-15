@@ -134,4 +134,7 @@ STATICFILES_DIRS = [
 
 SITE_ID = 1
 
-STATICSITEMAPS_ROOT_SITEMAP = 'testapp.sitemaps.sitemaps'
+STATICSITEMAPS_ROOT_SITEMAP = {
+    "sitemap-nl.xml": 'testapp.sitemaps.sitemaps',
+    "sitemap-be.xml": 'testapp.sitemaps.sitemaps_be',
+}

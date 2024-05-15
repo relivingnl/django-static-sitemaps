@@ -39,7 +39,7 @@ class SitemapGenerator(object):
         except TypeError:
             self.storage = _lazy_load(conf.STORAGE_CLASS)()
 
-        self.sitemaps = _lazy_load(conf.ROOT_SITEMAP)
+        self.sitemaps = conf.ROOT_SITEMAP
 
         if not isinstance(self.sitemaps, dict):
             self.sitemaps = dict(enumerate(self.sitemaps))
@@ -76,18 +76,19 @@ class SitemapGenerator(object):
             print(string)
 
     def write(self):
-        self.out('Generating sitemaps.', 1)
-        translation.activate(conf.LANGUAGE)
-        self.write_index()
-        translation.deactivate()
+        for filename, sitemap in self.sitemaps.items():
+            self.out(f'Generating sitemaps for filename ({filename}).', 1)
+            translation.activate(conf.LANGUAGE)
+            self.write_index(filename, sitemap)
+            translation.deactivate()
         self.out('Finished generating sitemaps.', 1)
 
-    def write_index(self):
+    def write_index(self, index_filename, sitemap):
         baseurl = self.normalize_url(conf.get_url())
         parts = []
 
         # Collect all pages and write them.
-        for section, site in self.sitemaps.items():
+        for section, site in _lazy_load(sitemap).items():
             if callable(site):
                 pages = site().paginator.num_pages
             else:
@@ -106,7 +107,7 @@ class SitemapGenerator(object):
                     'lastmod': lastmod
                 })
 
-        path = os.path.join(conf.ROOT_DIR, 'sitemap.xml')
+        path = os.path.join(conf.ROOT_DIR, index_filename)
         self.out('Writing index file.', 2)
 
         if self.storage.exists(path):
