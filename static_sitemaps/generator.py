@@ -84,7 +84,7 @@ class SitemapGenerator(object):
         self.out('Finished generating sitemaps.', 1)
 
     def write_index(self, index_filename, sitemap):
-        baseurl = self.normalize_url(conf.get_url())
+        baseurl = self.normalize_url(conf.get_url(index_filename))
         parts = []
 
         # Collect all pages and write them.

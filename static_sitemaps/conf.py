@@ -53,8 +53,8 @@ MOCK_SITE_NAME = getattr(settings, 'STATICSITEMAPS_MOCK_SITE_NAME', None)
 MOCK_SITE_PROTOCOL = getattr(settings, 'STATICSITEMAPS_MOCK_SITE_PROTOCOL', 'http')
 
 
-def get_url():
-    _url = getattr(settings, 'STATICSITEMAPS_URL', None)
+def get_url(index_filename=None):
+    _url = getattr(settings, 'STATICSITEMAPS_URL', None).get(index_filename)
     if _url is not None:
         return _url
 
